@@ -31,6 +31,10 @@ void mainloop() {
         if (result == true) {
             if (turn == white) {
                 turn = black;
+                std::string a;
+                best_move(board, turn);
+                std::cin >> a;
+
                 message = "black to move\n     white moved " + move;
             } else {
                 turn = white;
@@ -39,6 +43,7 @@ void mainloop() {
         } else {
             message = turn + " to move\n     INVALID MOVE: " + move;
         }
+
 
         system("cls");
         std::cout << "\n     " << message;
