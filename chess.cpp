@@ -31,11 +31,20 @@ void mainloop() {
         if (result == true) {
             if (turn == white) {
                 turn = black;
-                std::string a;
-                best_move(board, turn);
-                std::cin >> a;
+                
+                std::vector<std::vector<int>> bot_move = best_move(board, turn);
 
-                message = "black to move\n     white moved " + move;
+                char piece = board[bot_move[0][0]][bot_move[0][1]];
+                board[bot_move[0][0]][bot_move[0][1]] = '0';
+                board[bot_move[1][0]][bot_move[1][1]] = piece;
+                
+                std::cout << bot_move[0][0] << ", " << bot_move[0][1] << " :: " << bot_move[1][0] << ", " << bot_move[1][1] << "\n";
+                std::cin;
+
+                turn = white;
+
+                message = "white to move\n     black moved " + std::to_string(bot_move[0][0]) + ", " + std::to_string(bot_move[1][1]) + " to " + std::to_string(bot_move[0][0]) + ", " + std::to_string(bot_move[1][1]);
+                // message = "black to move\n     white moved " + move;
             } else {
                 turn = white;
                 message = "white to move\n     black moved " + move;
