@@ -43,7 +43,7 @@ void mainloop() {
 
                 turn = white;
 
-                std::vector<std::vector<int>> move = bot_move(board, true, 4);
+                std::vector<std::vector<int>> move = bot_move(board, true, 8);
 
                 std::vector<int> move1 = move[0];
                 std::vector<int> move2 = move[1];
@@ -79,8 +79,8 @@ int main() {
     // std::cout << (char)0xDB;
     // std::cout << (char)0xFF;
 
-    init_board(board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/");
-    // init_board(board, "6k1/5p2/6p1/8/7p/8/6PP/6K1/");
+    // init_board(board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/");
+    init_board(board, "6k1/5p2/6p1/8/7p/8/6PP/6K1/");
 
     print_board(board);
 

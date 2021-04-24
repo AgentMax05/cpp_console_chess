@@ -13,17 +13,32 @@ std::vector<int> king_location(std::vector<std::vector<char>> board, bool isLowe
 
 std::map<char, int> piece_values = {{'p', 1}, {'b', 3}, {'n', 3}, {'r', 5}, {'q', 9}};
 std::vector<std::vector<int>> center_squares = {{3, 2}, {4, 2}, {3, 3}, {3, 4}, {4, 3}, {4, 4}, {3, 5}, {4, 5}};
+std::map<std::string, double> transposition_table;
 
 // setting move scoring for different variables:
-double stacked_pawn = -2.5;
-double king_check = 10;
-double material_factor = 0.75;
-double center = 2.0;
+double stacked_pawn = -0.5;
+double king_check = 3;
+double material_factor = 0.65;
+double center = 1.0;
 
 // white is a positive value while black is a negative value
 // this tries to find an overall value for the board to see if
 // black or white is favored
 
+// convert board position to string:
+std::string board_to_str(std::vector<std::vector<char>> board, bool lowercaseSide, int depth) {
+    std::string board_str = "";
+    for (int row = 0; row < board.size(); row++) {
+        for (int column = 0; column < board[row].size(); column++) {
+            board_str += board[row][column];
+        }
+    }
+    board_str += std::to_string(lowercaseSide);
+    board_str += std::to_string(depth);
+    return board_str;
+}
+
+// find all possible moves for given side
 std::vector<std::vector<std::vector<int>>> find_moves(std::vector<std::vector<char>> board, bool isLowercase) {
 
     std::vector<std::vector<std::vector<int>>> possible_moves = {};
@@ -194,8 +209,15 @@ double minimax(std::vector<std::vector<char>> board, bool lowercaseSide, int dep
     board[move1[0]][move1[1]] = '0';
     board[move2[0]][move2[1]] = piece;
 
+
     if (depth == 0) {
         return value_board(board);
+    }
+
+    std::string board_string = board_to_str(board, lowercaseSide, depth);
+
+    if (transposition_table.find(board_string) != transposition_table.end()) {
+        return transposition_table[board_string];
     }
 
     std::vector<std::vector<std::vector<int>>> enemy_moves = find_moves(board, lowercaseSide == false);
@@ -211,6 +233,7 @@ double minimax(std::vector<std::vector<char>> board, bool lowercaseSide, int dep
                     beta = lowest;
                 }
                 if (beta <= alpha) {
+                    transposition_table[board_string] = lowest;
                     return lowest;
                 }
             }
@@ -227,6 +250,7 @@ double minimax(std::vector<std::vector<char>> board, bool lowercaseSide, int dep
                     alpha = highest;
                 }
                 if (beta <= alpha) {
+                    transposition_table[board_string] = highest;
                     return highest;
                 }
             }
