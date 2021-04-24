@@ -32,18 +32,30 @@ void mainloop() {
             if (turn == white) {
                 turn = black;
                 
-                std::vector<std::vector<int>> bot_move = best_move(board, turn);
+                // std::vector<std::vector<int>> bot_move = best_move(board, turn);
 
-                char piece = board[bot_move[0][0]][bot_move[0][1]];
-                board[bot_move[0][0]][bot_move[0][1]] = '0';
-                board[bot_move[1][0]][bot_move[1][1]] = piece;
+                // char piece = board[bot_move[0][0]][bot_move[0][1]];
+                // board[bot_move[0][0]][bot_move[0][1]] = '0';
+                // board[bot_move[1][0]][bot_move[1][1]] = piece;
                 
-                std::cout << bot_move[0][0] << ", " << bot_move[0][1] << " :: " << bot_move[1][0] << ", " << bot_move[1][1] << "\n";
-                std::cin;
+                // std::cout << bot_move[0][0] << ", " << bot_move[0][1] << " :: " << bot_move[1][0] << ", " << bot_move[1][1] << "\n";
+                // std::cin;
 
                 turn = white;
 
-                message = "white to move\n     black moved " + std::to_string(bot_move[0][0]) + ", " + std::to_string(bot_move[1][1]) + " to " + std::to_string(bot_move[0][0]) + ", " + std::to_string(bot_move[1][1]);
+                std::vector<std::vector<int>> move = bot_move(board, true, 4);
+
+                std::vector<int> move1 = move[0];
+                std::vector<int> move2 = move[1];
+
+                char piece = board[move1[0]][move1[1]];
+                board[move1[0]][move1[1]] = '0';
+                board[move2[0]][move2[1]] = piece;
+
+                // int a;
+                // std::cout << "\nmove done: ";
+                // std::cin >> a;
+                // message = "white to move\n     black moved " + std::to_string(bot_move[0][0]) + ", " + std::to_string(bot_move[1][1]) + " to " + std::to_string(bot_move[0][0]) + ", " + std::to_string(bot_move[1][1]);
                 // message = "black to move\n     white moved " + move;
             } else {
                 turn = white;
