@@ -179,7 +179,8 @@ double value_board(std::vector<std::vector<char>> board) {
     return material + pawns + check + control_center;
 }
 
-double minimax(std::vector<std::vector<char>> board, bool lowercaseSide, int depth, std::vector<std::vector<int>> move) {
+// alpha is maximum value, beta is minimum value, initialized at -999999, and 999999 (opposite of max and min)
+double minimax(std::vector<std::vector<char>> board, bool lowercaseSide, int depth, std::vector<std::vector<int>> move, double alpha, double beta) {
     std::vector<int> move1 = move[0];
     std::vector<int> move2 = move[1];
 
@@ -199,34 +200,67 @@ double minimax(std::vector<std::vector<char>> board, bool lowercaseSide, int dep
 
     std::vector<std::vector<std::vector<int>>> enemy_moves = find_moves(board, lowercaseSide == false);
 
-    std::vector<double> move_scores = {};
-
-    for (int i = 0; i < enemy_moves.size(); i++) {
-        double score = minimax(board, lowercaseSide == false, depth - 1, enemy_moves[i]);
-        move_scores.push_back(score);
-    }
-
+    // lowercase side is black meaning minimizing side
     if (lowercaseSide == true) {
         double lowest = 999999;
-
-        for (int i = 0; i < move_scores.size(); i++) {
-            if (move_scores[i] < lowest) {
-                lowest = move_scores[i];
+        for (int i = 0; i < enemy_moves.size(); i++) {
+            double score = minimax(board, lowercaseSide == false, depth - 1, enemy_moves[i], alpha, beta);
+            if (score < lowest) {
+                lowest = score;
+                if (lowest < beta) {
+                    beta = lowest;
+                }
+                if (beta <= alpha) {
+                    return lowest;
+                }
             }
         }
-        return lowest;
     }
 
     else {
         double highest = -999999;
-
-        for (int i = 0; i < move_scores.size(); i++) {
-            if (move_scores[i] > highest) {
-                highest = move_scores[i];
+        for (int i = 0; i < enemy_moves.size(); i++) {
+            double score = minimax(board, lowercaseSide == false, depth - 1, enemy_moves[i], alpha, beta);
+            if (score > highest) {
+                highest = score;
+                if (highest > alpha) {
+                    alpha = highest;
+                }
+                if (beta <= alpha) {
+                    return highest;
+                }
             }
         }
-        return highest;
     }
+
+    // std::vector<double> move_scores = {};
+
+    // for (int i = 0; i < enemy_moves.size(); i++) {
+    //     double score = minimax(board, lowercaseSide == false, depth - 1, enemy_moves[i]);
+    //     move_scores.push_back(score);
+    // }
+
+    // if (lowercaseSide == true) {
+    //     double lowest = 999999;
+
+    //     for (int i = 0; i < move_scores.size(); i++) {
+    //         if (move_scores[i] < lowest) {
+    //             lowest = move_scores[i];
+    //         }
+    //     }
+    //     return lowest;
+    // }
+
+    // else {
+    //     double highest = -999999;
+
+    //     for (int i = 0; i < move_scores.size(); i++) {
+    //         if (move_scores[i] > highest) {
+    //             highest = move_scores[i];
+    //         }
+    //     }
+    //     return highest;
+    // }
 
 }
 
@@ -238,7 +272,7 @@ std::vector<std::vector<int>> bot_move(std::vector<std::vector<char>> board, boo
     int best_move = 0;
 
     for (int i = 0; i < moves.size(); i++) {
-        double score = minimax(board, lowercaseSide, depth - 1, moves[i]);
+        double score = minimax(board, lowercaseSide, depth - 1, moves[i], -999999, 999999);
 
         if (lowercaseSide == false) {
             std::cout << "POOP";
