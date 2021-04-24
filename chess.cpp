@@ -80,7 +80,8 @@ int main() {
     // std::cout << (char)0xFF;
 
     init_board(board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/");
-    // init_board(board, "4k3/pppppppp/8/8/8/8/8/8/");
+    // init_board(board, "6k1/5p2/6p1/8/7p/8/6PP/6K1/");
+
     print_board(board);
 
     mainloop();

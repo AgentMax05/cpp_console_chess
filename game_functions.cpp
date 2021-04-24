@@ -278,10 +278,10 @@ bool make_move(std::vector<std::vector<char>> &board, std::string move, std::str
     else if (!is_lowercase(piece) && turn == "black") {correct_side = false;}
     else {correct_side = true;}
 
-    std::cout << (is_lowercase(piece) == true && turn == "white");
-    std::cout << (is_lowercase(piece) == false && turn == "black");
-    std::cout << correct_side;
-    std::cout << piece;
+    // std::cout << (is_lowercase(piece) == true && turn == "white");
+    // std::cout << (is_lowercase(piece) == false && turn == "black");
+    // std::cout << correct_side;
+    // std::cout << piece;
     if (piece == '0' || correct_side == false) {
         std::cout << "INVALID MOVE: " << move;
         return false;
@@ -299,6 +299,12 @@ bool make_move(std::vector<std::vector<char>> &board, std::string move, std::str
 
     if (legal_check == false) {
         return false;
+    }
+
+    // promote pawn to queen:
+    if (to_lowercase(piece) == 'p' && (move2_row == 0 || move2_row == 7)) {
+        if (is_lowercase(piece)) {piece = 'q';}
+        else {piece = 'Q';}
     }
 
     board[move1_row][move1_column] = '0';

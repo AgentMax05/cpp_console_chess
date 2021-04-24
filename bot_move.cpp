@@ -186,6 +186,10 @@ double minimax(std::vector<std::vector<char>> board, bool lowercaseSide, int dep
     char piece = board[move1[0]][move1[1]];
     char previous = board[move2[0]][move2[1]];
 
+    if (to_lowercase(piece) == 'p' && (move2[0] == 0 || move2[0] == 7)) {
+        if (is_lowercase(piece)) {piece = 'q';}
+        else {piece = 'Q';}
+    }
     board[move1[0]][move1[1]] = '0';
     board[move2[0]][move2[1]] = piece;
 
