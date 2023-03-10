@@ -55,6 +55,8 @@ void mainloop() {
             running = false;
         }
     }
+
+    system("pause"); // wait for enter before closing
 }
 
 int main() {
