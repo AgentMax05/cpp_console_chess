@@ -26,6 +26,7 @@ void mainloop() {
     while (running) {
         std::cout << "Enter move:\n";
         std::cin >> move;
+
         bool result = make_move(board, move, turn);
         bool isCheckmate = false, isStalemate = false;
 
@@ -67,8 +68,7 @@ void mainloop() {
 int main() {
     std::cout << "Welcome to Console Chess!\n";
 
-    // init_board(board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/");
-    init_board(board, "6k1/7Q/8/8/8/8/8/5Q1Q/");
+    init_board(board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/");
 
     print_board(board);
 

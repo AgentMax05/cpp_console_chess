@@ -2,7 +2,6 @@
 #include <vector>
 #include <iostream>
 
-
 char to_lowercase(char input) {
     if (input >= 65 && input <= 90) {
         return char(input + 32);
@@ -65,7 +64,7 @@ bool check_legal(std::vector<std::vector<char>> board, char piece, std::vector<i
                     isLegal = true;
                 }
                 // check for moving pawn up two spaces:
-                else if (from[0] == 6 && from[1] == to[1] && (from[0] - to[0]) == 2) {
+                else if (from[0] == 6 && from[1] == to[1] && (from[0] - to[0]) == 2 && board[5][from[1]] == '0') {
                     isLegal = true;
                 }
             }
@@ -83,7 +82,7 @@ bool check_legal(std::vector<std::vector<char>> board, char piece, std::vector<i
                     isLegal = true;
                 }
                 // check for moving pawn up two spaces:
-                else if (from[0] == 1 && from[1] == to[1] && (from[0] - to[0]) == -2) {
+                else if (from[0] == 1 && from[1] == to[1] && (from[0] - to[0]) == -2 && board[2][from[1]] == '0') {
                     isLegal = true;
                 }
             }
