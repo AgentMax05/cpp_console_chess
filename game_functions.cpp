@@ -200,7 +200,6 @@ bool check_legal(std::vector<std::vector<char>> board, char piece, std::vector<i
 
 }
 
-
 std::vector<int> king_location(std::vector<std::vector<char>> board, bool isLowerCase) {
     for (int row = 0; row < board.size(); row++) {
         for (int column = 0; column < board.size(); column++) {
@@ -215,7 +214,25 @@ std::vector<int> king_location(std::vector<std::vector<char>> board, bool isLowe
     return {0, 0};
 }
 
+// false: check
+// true: not check
+bool check_check_inplace(std::vector<std::vector<char>> board, bool isLowercase) {
+    std::vector<int> kingPos = king_location(board, isLowercase);
 
+    for (int row = 0; row < board.size(); row++) {
+        for (int col = 0; col < board[0].size(); col++) {
+            if (((row == kingPos[0]) && (col == kingPos[1])) || is_lowercase(board[row][col]) == isLowercase) continue;
+
+            if (check_legal(board, board[row][col], {row, col}, kingPos, isLowercase ? "white" : "black")) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// false: check
+// true: not check
 bool check_check(std::vector<std::vector<char>> board, char piece, int move1_row, int move1_column, int move2_row, int move2_column, std::string turn) {
 
     bool legal = true;
@@ -248,7 +265,40 @@ bool check_check(std::vector<std::vector<char>> board, char piece, int move1_row
     return legal;
 }
 
-bool make_move(std::vector<std::vector<char>> &board, std::string move, std::string turn) {
+// true: checkmate
+// false: not checkmate
+bool check_checkmate(std::vector<std::vector<char>> board, bool kingIsLowercase) {
+    // check if king is initially in check
+    if (check_check_inplace(board, kingIsLowercase)) return false;
+
+    std::vector<int> kingLoc = king_location(board, kingIsLowercase);
+
+    std::string side = kingIsLowercase ? "black" : "white";
+
+    for (int row = 0; row < board.size(); row++) {
+        for (int col = 0; col < board[0].size(); col++) {
+            // find piece that is on the same side as king (or king itself)
+            if (board[row][col] == '0' || (is_lowercase(board[row][col]) != kingIsLowercase)) continue;
+
+            // check all possible moves for piece
+            for (int row2 = 0; row2 < board.size(); row2++) {
+                for (int col2 = 0; col2 < board[0].size(); col2++) {
+                    if ((row2 == row) && (col2 == col2)) continue;
+                    if (check_legal(board, board[row][col], {row, col}, {row2, col2}, side)) {
+                        bool ends_check = check_check(board, board[row][col], row, col, row2, col2, side);
+                        if (ends_check) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+// true (legal move) = 1, false (illegal move) = 0, checkmate (no possible moves) = -1 
+int make_move(std::vector<std::vector<char>> &board, std::string move, std::string turn) {
     std::string move1,  move2, current;
 
     for (int i = 0; i < move.size(); i++) {
@@ -274,14 +324,11 @@ bool make_move(std::vector<std::vector<char>> &board, std::string move, std::str
     char piece = board[move1_row][move1_column];
 
     bool correct_side = false;
-    if (is_lowercase(piece) && turn == "white") {correct_side = false;}
-    else if (!is_lowercase(piece) && turn == "black") {correct_side = false;}
-    else {correct_side = true;}
 
-    // std::cout << (is_lowercase(piece) == true && turn == "white");
-    // std::cout << (is_lowercase(piece) == false && turn == "black");
-    // std::cout << correct_side;
-    // std::cout << piece;
+    if (is_lowercase(piece) != (turn == "white")) {
+        correct_side = true;
+    }
+
     if (piece == '0' || correct_side == false) {
         std::cout << "INVALID MOVE: " << move;
         return false;
@@ -289,7 +336,7 @@ bool make_move(std::vector<std::vector<char>> &board, std::string move, std::str
 
     bool legal = check_legal(board, to_lowercase(piece), {move1_row, move1_column}, {move2_row, move2_column}, turn);
 
-    if (legal == false) {
+    if (!legal) {
         std::cout << "ILLEGAL MOVE: " << move;
         return false;
     }
@@ -311,5 +358,4 @@ bool make_move(std::vector<std::vector<char>> &board, std::string move, std::str
     board[move2_row][move2_column] = piece;
 
     return true;
-
 }
