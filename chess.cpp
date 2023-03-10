@@ -27,14 +27,19 @@ void mainloop() {
         std::cout << "Enter move:\n";
         std::cin >> move;
         bool result = make_move(board, move, turn);
-        bool isCheckmate = false;
+        bool isCheckmate = false, isStalemate = false;
 
         if (result == true) {
             // check if the other king is in checkmate
             isCheckmate = check_checkmate(board, turn == white);
+            
+            // check if other king is in stalemate
+            isStalemate = check_stalemate(board, turn == white);
 
             if (isCheckmate) {
                 message = "checkmate\n     " + turn + " wins";
+            } else if (isStalemate) {
+                message = "stalemate\n";
             } else if (turn == white) {
                 message = "black to move\n     white moved " + move;
                 turn = black;
@@ -51,7 +56,7 @@ void mainloop() {
         std::cout << "\n\n";
         print_board(board);
 
-        if (isCheckmate) {
+        if (isCheckmate || isStalemate) {
             running = false;
         }
     }
@@ -62,7 +67,8 @@ void mainloop() {
 int main() {
     std::cout << "Welcome to Console Chess!\n";
 
-    init_board(board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/");
+    // init_board(board, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/");
+    init_board(board, "6k1/7Q/8/8/8/8/8/5Q1Q/");
 
     print_board(board);
 

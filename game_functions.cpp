@@ -271,8 +271,6 @@ bool check_checkmate(std::vector<std::vector<char>> board, bool kingIsLowercase)
     // check if king is initially in check
     if (check_check_inplace(board, kingIsLowercase)) return false;
 
-    std::vector<int> kingLoc = king_location(board, kingIsLowercase);
-
     std::string side = kingIsLowercase ? "black" : "white";
 
     for (int row = 0; row < board.size(); row++) {
@@ -283,12 +281,37 @@ bool check_checkmate(std::vector<std::vector<char>> board, bool kingIsLowercase)
             // check all possible moves for piece
             for (int row2 = 0; row2 < board.size(); row2++) {
                 for (int col2 = 0; col2 < board[0].size(); col2++) {
-                    if ((row2 == row) && (col2 == col2)) continue;
+                    if ((row2 == row) && (col2 == col)) continue;
                     if (check_legal(board, board[row][col], {row, col}, {row2, col2}, side)) {
                         bool ends_check = check_check(board, board[row][col], row, col, row2, col2, side);
                         if (ends_check) {
                             return false;
                         }
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+// true: stalemate
+// false: not stalemate
+bool check_stalemate(std::vector<std::vector<char>> board, bool kingIsLowercase) {
+    if (!check_check_inplace(board, kingIsLowercase)) return false;
+
+    // check if each possible move is illegal
+    for (int row = 0; row < board.size(); row++) {
+        for (int col = 0; col < board[0].size(); col++) {
+            if (board[row][col] == '0' || is_lowercase(board[row][col]) != kingIsLowercase) continue;
+
+            // check each move
+            for (int row2 = 0; row2 < board.size(); row2++) {
+                for (int col2 = 0; col2 < board[0].size(); col2++) {
+                    // check if move is legal and king is not in check after move
+                    if (check_legal(board, board[row][col], {row, col}, {row2, col2}, kingIsLowercase ? "black" : "white") && 
+                        check_check(board, board[row][col], row, col, row2, col2, kingIsLowercase ? "black" : "white")) {
+                        return false;
                     }
                 }
             }
