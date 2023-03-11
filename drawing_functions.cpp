@@ -33,8 +33,7 @@ void print_line(std::string side) {
         }
     }
 
-    std::cout << "\n";
-
+    std::cout << vertical_dash << "\n";
 }
 
 void draw_text_line(int row, std::vector<std::vector<char>> board) {
@@ -55,7 +54,7 @@ void draw_text_line(int row, std::vector<std::vector<char>> board) {
             std::cout << black_square << black_square << black_square << board[row][i] << black_square << black_square;
         }
     }
-
+    std::cout << vertical_dash;
 }
 
 int char_to_int(char input) {
@@ -113,6 +112,12 @@ void init_board(std::vector<std::vector<char>> &board, std::string fen_notation)
 
 
 void print_board(std::vector<std::vector<char>> board) {
+    std::cout << "     " << (char)218;
+    for (int i = 0; i < 48; i++) {
+        std::cout << upper_dash;
+    }
+    std::cout << (char)191 << '\n';
+
     for (int row = 0; row < board.size(); row++) {
         if ((row) % 2 == 0) {
             print_line("white");
@@ -137,6 +142,7 @@ void print_board(std::vector<std::vector<char>> board) {
     for (int i = 0; i < 48; i++) {
         std::cout << upper_dash;
     }
+    std::cout << (char)217;
 
     std::cout << "\n     " << "   A      B     C     D     E     F     G     H\n";
 
