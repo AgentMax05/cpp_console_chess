@@ -15,5 +15,6 @@ Each piece is represented by a letter: p for pawn, r for rook, n for knight, b f
 Uppercase letters represent white pieces, while lowercase letters represent black pieces.
   
 ## Entering Moves
-Moves must be entered in the following format: [file-from][rank-from]-[file-to][rank-to]. 
+Moves must be entered in the following format: [file-from][rank-from]-[file-to][rank-to] (for example e2-e4).
+
 In other words, the position of the piece with the letter first and then number, followed by a dash, and then the destination for the piece to be moved to.
